@@ -1,0 +1,28 @@
+@startuml
+title Smart House System Admin System API Component Diagram
+
+top to bottom direction
+
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+
+Container_Boundary(SmartHouseSystem, "Smart House System") {
+   Container(WebApp, "Web Application", "React", "Web Application for the system")
+   Container(AdministrationService, "Admin System API", "Python", "Admin")
+   Container(Database, "Database", "PostgreSQL", "Store system data")
+}
+
+Container(AdministrationService, "Admin System API", "Python") {
+  Component(AuthController, "AuthController", "Handles authentication and authorization")
+  Component(UserAdminController, "UserAdminController", "Manage user accounts")
+  Component(ServiceManagmentController, "ServiceManagmentController", "Manage user services (subscribtions etc.)")
+  Component(ServiceLayer, "Service Layer", "Business logic")
+  Component(RepositoryLayer, "Repository Layer", "Data access logic")
+}
+
+Rel(WebApp, AdministrationService, "Provide admin API")
+Rel(AuthController,ServiceLayer,"Calls business logic")
+Rel(UserAdminController,ServiceLayer,"Calls business logic")
+Rel(ServiceManagmentController,ServiceLayer,"Calls business logic")
+Rel(ServiceLayer,RepositoryLayer,"Reads/Writes data")
+Rel(RepositoryLayer,Database,"Reads/Writes user data")
+@enduml

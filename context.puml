@@ -1,0 +1,15 @@
+@startuml
+
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+
+Person(user, "User", "A user of the smart house system")
+Person(admin, "Administrator", "An administrator managing the system")
+System(SmartHouseSystem, "Smart House System", "System managing smart house devices")
+System_Ext(api, "Third-Party Sensor API 1..N", "External API for sensor")
+
+Rel(user, SmartHouseSystem, "Uses the system")
+Rel(admin,SmartHouseSystem,"Manages the system")
+Rel(api, SmartHouseSystem, "Register in the system")
+
+
+@enduml

@@ -1,0 +1,38 @@
+@startuml
+title Smart House System Container Diagram
+
+top to bottom direction
+
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+
+Person(user, "User", "A user of the smart house system")
+Person(admin, "Administrator", "An administrator managing the system")
+System(SmartHouseSystem, "Smart House System", "System managing smart house devices")
+System_Ext(api, "Third-Party Sensor API 1..N", "External API for sensor")
+
+Container_Boundary(SmartHouseSystem, "Smart House System") {
+    Container(WebApp, "Web Application", "React", "Web Application for the system")
+
+    Container(ManageSensorService, "Manage Sensor API", "Go", "Manage user sensors")
+    Container(MonitoringSystemService, "Monitoring System API", "Go", "Monitor user sensors")
+    Container(AdministrationService, "Admin System API", "Python", "Admin")
+    Container(UserService, "User SaaS API", "Python", "Provide User SaaS API")
+    
+    Container(Database, "Database", "PostgreSQL", "Store system data")
+}
+
+Rel(user, WebApp, "Uses the system as SaaS")
+Rel(admin, WebApp, "Manage the system")
+Rel(WebApp, AdministrationService, "Process system administration")
+Rel(WebApp, UserService, "Provide user service API")
+Rel(WebApp, ManageSensorService, "Provide sensor service API")
+Rel(WebApp, MonitoringSystemService, "Telementry and monitoring API")
+Rel(ManageSensorService, Database, "Read/Write Database")
+Rel(MonitoringSystemService, Database, "Collect monitoring info")
+Rel(UserService, Database, "Read/Write User Info")
+Rel(AdministrationService, Database, "Read/Write Database")
+Rel(api, ManageSensorService, "Register sensor in the service")
+
+
+
+@enduml

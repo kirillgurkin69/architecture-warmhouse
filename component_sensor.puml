@@ -1,0 +1,32 @@
+@startuml
+title Smart House System Manage Sensor API Component Diagram
+
+top to bottom direction
+
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+
+Container_Boundary(SmartHouseSystem, "Smart House System") {
+   Container(WebApp, "Web Application", "React", "Web Application for the system")
+   Container(ManageSensorService, "Manage Sensor API", "Go", "Manage user sensors")
+   Container(Database, "Database", "PostgreSQL", "Store system data")
+}
+
+Container(ManageSensorService, "Admin System API", "Python") {
+  Component(HeatingController, "HeatingController", "Manage Heating Sensor")
+  Component(LightController, "LightController", "Manage Light Sensor")
+  Component(GateController, "GateController", "Manage Gate Sensor")
+  Component(VideoController, "VideoController", "Manage Video Sensor")
+  Component(BaseSensorConroller, "BaseSensorConroller", "Base Sensor API")
+  Component(ServiceLayer, "Service Layer", "Business logic")
+  Component(RepositoryLayer, "Repository Layer", "Data access logic")
+}
+
+Rel(WebApp, ManageSensorService, "Provide manage sensor API")
+Rel(HeatingController,BaseSensorConroller,"Calls base API")
+Rel(LightController,BaseSensorConroller,"Calls base API")
+Rel(GateController,BaseSensorConroller,"Calls base API")
+Rel(VideoController,BaseSensorConroller,"Calls base API")
+Rel(BaseSensorConroller,ServiceLayer,"Calls business logic")
+Rel(ServiceLayer,RepositoryLayer,"Reads/Writes data")
+Rel(RepositoryLayer,Database,"Reads/Writes user data")
+@enduml
