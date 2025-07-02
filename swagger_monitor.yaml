@@ -1,0 +1,77 @@
+openapi: 3.0.4
+info:
+  title: Smart House System Monitoring API - OpenAPI 3.0
+  description: |-
+    This is a sample monitoring servcie api for smart house system
+  version: 1.0.0
+servers:
+  - url: http://localhost/api/v1/monitor
+paths:
+  /sensor/{sensorId}:
+    get:
+      tags:
+        - sensor
+      summary: Healthcheck sensor
+      description: Check if sensor alive and correctly working
+      operationId: checkSensor
+      parameters:
+        - name: sensorId
+          in: path
+          description: The sensor id that needs to be checked.
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Sensor'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Sensor'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+components:
+  schemas:
+    Sensor:
+      type: object
+      properties:
+        userId:
+          type: integer
+          format: int64
+          example: 10
+        houseId:
+          type: integer
+          format: int64
+          example: 198
+        typeId:
+          type: integer
+          format: int64
+          example: 7
+        serialNumber:
+          type: string
+          example: 123AN-7653I
+        status:
+          type: string
+          example: alive
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+      required:
+        - code
+        - message
+  securitySchemes:
+    api_key:
+      type: apiKey
+      name: api_key
+      in: header
