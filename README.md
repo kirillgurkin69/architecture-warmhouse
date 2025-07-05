@@ -94,7 +94,7 @@
 ### 2. Документация API
 
 - [Admin API](swagger_admin.yaml)
-- [Monitoring API](swagger_monitoring.yaml)
+- [Monitoring API](swagger_monitor.yaml)
 - [User API](swagger_user.yaml)
 - [Sensor API](async_sensor.yaml)
 
