@@ -1,0 +1,69 @@
+@startuml
+  entity "User" as usr {
+    *id : integer <<generated>>
+    --
+    *login : string
+    *name : string
+    email : string
+    isAdmin : boolean
+  }
+
+  entity "House" as hs {
+    *id : integer <<generated>>
+    --
+    *userId : integer <<FK>>
+    *address : string
+  }
+
+  usr ||..o{ hs
+
+  entity "Sensor Type" as snstp {
+    *id : integer <<generated>>
+    --
+    *name : string
+  }
+
+  entity "Sensor" as sns {
+    *id : integer <<generated>>
+    --
+    *houseId : integer <<FK>>
+    *typeId : integer <<FK>>
+    *serialNumber : string
+    *status : boolean
+  }
+
+  sns ||..|| snstp
+  hs ||..|{ sns
+
+  entity "Telemetry Data" as tlm {
+    *id : integer <<generated>>
+    --
+    *sensorId : integer <<FK>>
+    *data : string 
+  }
+
+  sns ||..o{ tlm
+
+  entity "Scenario" as scn {
+    *id : integer <<generated>>
+    --
+    *userId : integer <<FK>>
+    *startDate : date
+    endDate : date
+    *active: boolean
+  }
+
+  usr ||..o{ scn
+
+  entity "Scenario Step" as scnst {
+    *id : integer <<generated>>
+    --
+    *scenarioId : integer <<FK>>
+    *sensorId : integer <<FK>>
+    *script : object
+  }
+  
+  scn ||..|{ scnst
+  scnst ||..|| sns
+
+@enduml

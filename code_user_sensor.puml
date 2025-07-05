@@ -1,0 +1,48 @@
+@startuml
+title Smart House System Code Diagram
+
+top to bottom direction
+
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+
+class User {
+  +Integer id
+  +String name
+  +String login
+  +String email
+  +void register()
+  +void login()
+}
+
+class UserSensor {
+  +Integer id
+  +String sensorType
+  +Integer userId
+  +String serialNumber
+  +void register()
+  +void detele()
+}
+
+
+class UserScenario {
+  +Integer id
+  +Date startDate
+  +Date endDate
+  +void activate()
+  +void remove()
+}
+
+class ScenarioStep {
+  +Integer id
+  +Integer sensorId
+  +Integer scenarioId
+  +Object script
+  +void run()
+}
+
+User "1" -- "0..*" UserSensor : has
+User "1" -- "0..*" UserScenario : has
+UserScenario "1" -- "0..*" ScenarioStep : includes
+ScenarioStep "1" -- "1" UserSensor : includes
+
+@enduml

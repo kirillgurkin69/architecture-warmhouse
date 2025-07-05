@@ -1,0 +1,26 @@
+@startuml
+title Smart House System Monitoring API Component Diagram
+
+top to bottom direction
+
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+
+Container_Boundary(SmartHouseSystem, "Smart House System") {
+   Container(WebApp, "Web Application", "React", "Web Application for the system")
+   Container(MonitoringSystemService, "Monitoring System API", "Go", "Monitor user sensors")
+   Container(Database, "Database", "PostgreSQL", "Store system data")
+}
+
+Container(MonitoringSystemService, "Admin System API", "Python") {
+  Component(TelemetryController, "TelemetryController", "Process Sensor Telemetry")
+  Component(MonitoringController, "MonitoringController", "Monitor Sensor Status")
+  Component(ServiceLayer, "Service Layer", "Business logic")
+  Component(RepositoryLayer, "Repository Layer", "Data access logic")
+}
+
+Rel(WebApp, MonitoringSystemService, "Provide monitoring API")
+Rel(TelemetryController,ServiceLayer,"Calls business logic")
+Rel(MonitoringController,ServiceLayer,"Calls business logic")
+Rel(ServiceLayer,RepositoryLayer,"Reads/Writes data")
+Rel(RepositoryLayer,Database,"Reads/Writes user data")
+@enduml

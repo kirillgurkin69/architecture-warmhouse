@@ -1,0 +1,65 @@
+openapi: 3.0.4
+info:
+  title: Smart House System Admin API - OpenAPI 3.0
+  description: |-
+    This is a sample admin api for smart house system
+  version: 1.0.0
+servers:
+  - url: http://localhost/api/v1/admin
+paths:
+  /status:
+    get:
+      summary: System Status
+      description: Check system status
+      operationId: status
+      responses:
+        '200':
+          description: system alive
+        '400':
+          description: system down
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /maintanenceOn:
+    post:
+      summary: Disable System
+      description: Disable the whole system for maintanence window
+      operationId: disable
+      responses:
+        '200':
+          description: system disabled
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /maintanenceOff:
+    post:
+      summary: Enable System
+      description: Enable the whole system after the maintanence window
+      operationId: enable
+      responses:
+        '200':
+          description: system enabled
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+      required:
+        - code
+        - message
