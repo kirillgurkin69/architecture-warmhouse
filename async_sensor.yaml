@@ -1,0 +1,158 @@
+asyncapi: 3.0.0
+info:
+  title: SmartHouse Manage Sensor MQTT API
+  version: 1.0.0
+  description: |-
+    The SmartHouse Manage Sensor API allows you to remotely manage the devices in your house
+    ### Check out its awesome features:
+    * Discover your new devices
+    * Turn a specific device on/off
+    * Receive real-time information about sensor status
+  license:
+    name: Apache 2.0
+    url: 'https://www.apache.org/licenses/LICENSE-2.0'
+defaultContentType: application/json
+servers:
+  production:
+    host: 'localhost:1883'
+    protocol: mqtt
+    description: Sensor broker
+channels:
+  discovery:
+    address: 'smarthouse/discovery'
+    messages:
+      discovery:
+        $ref: '#/components/messages/discovery'
+    description: The topic on which new devices publish their data and consumened by the system.
+  sensorValue:
+    address: 'smarthouse/sensorValue/{sensorId}'
+    messages: 
+      sensorValue:
+        $ref: '#/components/messages/sensorValue'
+    description: The topic on which sensor values information may be produced and consumed.
+    parameters:
+      sensorId:
+        $ref: '#/components/parameters/sensorId'
+  command:
+    address: 'smarthouse/command/{sensorId}'
+    messages:
+      command:
+        $ref: '#/components/messages/command'
+    parameters:
+      sensorId:
+        $ref: '#/components/parameters/sensorId'
+operations:
+  receiveSensorInfo:
+    action: receive
+    channel:
+      $ref: '#/channels/sensorValue'
+    summary: >-
+      Inform about values of a particular sensor.
+    traits:
+      - $ref: '#/components/operationTraits/mqtt'
+    messages:
+      - $ref: '#/channels/sensorValue/messages/sensorValue'
+  discovery:
+    action: receive
+    channel:
+      $ref: '#/channels/discovery'
+    summary: >-
+      Inform about new sensor appeared in the system.
+    traits:
+      - $ref: '#/components/operationTraits/mqtt'
+    messages:
+      - $ref: '#/channels/discovery/messages/discovery'
+  command:
+    action: send
+    channel:
+      $ref: '#/channels/command'
+    traits:
+      - $ref: '#/components/operationTraits/mqtt'
+    messages:
+      - $ref: '#/channels/command/messages/command'
+components:
+  messages:
+    sensorValue:
+      name: sensorValue
+      title: Sensor Value
+      summary: >-
+        Information provided by sensor
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/commonHeaders'
+      payload:
+        $ref: '#/components/schemas/sensorValuePayload'
+    discovery:
+      name: discovery
+      title: New device appeared
+      summary: >-
+        Inform about new sensor appeared in the system
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/commonHeaders'
+      payload:
+        $ref: '#/components/schemas/discoveryPayload'
+    command:
+      name: command
+      title: Specific sensor command, depends on sensor type
+      summary: Command for a particular sensor to act in some way.
+      traits:
+        - $ref: '#/components/messageTraits/commonHeaders'
+      payload:
+        $ref: '#/components/schemas/commandPayload'
+  schemas:
+    sensorValuePayload:
+      type: object
+      properties:
+        status:
+          type: integer
+          minimum: 0
+          maximum: 1
+          description: Sensor status 1 - active, 0 - disabled
+        unit:
+          type: string
+          description: unit of sensor value if applicable
+        value:
+          type: string
+          description: Sensor value information encoded base64
+        sentAt:
+          $ref: '#/components/schemas/sentAt'
+    discoveryPayload:
+      type: object
+      properties:
+        serialNumber:
+          type: string
+          description: Unique serial number of device (sensor)
+        sentAt:
+          $ref: '#/components/schemas/sentAt'
+    commandPayload:
+      type: object
+      properties:
+        command:
+          type: string
+          description: base64 encoded sensor command
+        sentAt:
+          $ref: '#/components/schemas/sentAt'
+    sentAt:
+      type: string
+      format: date-time
+      description: Date and time when the message was sent.
+  parameters:
+    streetlightId:
+      description: The ID of the streetlight.
+    sensorId:
+      description: The Id of the sensor
+  messageTraits:
+    commonHeaders:
+      headers:
+        type: object
+        properties:
+          my-app-header:
+            type: integer
+            minimum: 0
+            maximum: 100
+  operationTraits:
+    mqtt:
+      bindings:
+        mqtt:
+          qos: 1

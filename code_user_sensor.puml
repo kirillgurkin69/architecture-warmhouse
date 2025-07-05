@@ -18,6 +18,7 @@ class UserSensor {
   +Integer id
   +String sensorType
   +Integer userId
+  +String serialNumber
   +void register()
   +void detele()
 }
